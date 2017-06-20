@@ -13,6 +13,30 @@ struct FRCache {
     
     static let frCacheIdentifier = "com.freeskys.frCache"
     
+    /// Load cache
+    ///
+    /// - Parameters:
+    ///   - key: key Cache key
+    ///   - success: success Success retrieving cache
+    ///   - failure: failure Fail while retrieving cache
+    static func loadCache<T>(withKey key: String,
+                          success: (_ objects: [T]) -> Void,
+                          failure: () -> Void) {
+        let tempObjects = FRCache.getCacheArray(withKey: key) as [T]
+        
+        if tempObjects.count > 0 {
+            // If cache exist, use data from cache
+            success(tempObjects)
+        } else {
+            failure()
+        }
+    }
+    
+    /// Cache array
+    ///
+    /// - Parameters:
+    ///   - array: array The array to be cached
+    ///   - key: key Cache key
     static func cacheArray<T>(array: [T],
                            withKey key: String) {
         // Get file URL
@@ -30,6 +54,10 @@ struct FRCache {
         }
     }
     
+    /// Get cache array
+    ///
+    /// - Parameter key: key Cache key
+    /// - Returns: return value Cached array
     static func getCacheArray<T>(withKey key: String) -> [T] {
         // Get file URL
         let fileUrl = cacheDocumentURL(withKey: key)
@@ -50,6 +78,9 @@ struct FRCache {
         }
     }
     
+    /// Remove cache
+    ///
+    /// - Parameter key: key Cache key
     static func removeCache(withKey key: String) {
         // Get file URL
         let fileUrl = cacheDocumentURL(withKey: key)
@@ -62,6 +93,10 @@ struct FRCache {
         }
     }
     
+    /// Get cache document directory
+    ///
+    /// - Parameter key: key Cache key
+    /// - Returns: return value Document directory URL
     private static func cacheDocumentURL(withKey key: String) -> URL {
         // Get document directory URL
         guard let documentDirectoryUrl = FileManager.default.urls(
@@ -90,6 +125,9 @@ struct FRCache {
 
 extension Array {
     
+    /// Cache array
+    ///
+    /// - Parameter key: key Cache key
     func cacheArray(withKey key: String) {
         FRCache.cacheArray(array: self, withKey: key)
     }

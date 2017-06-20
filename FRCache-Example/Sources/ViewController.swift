@@ -31,16 +31,12 @@ class ViewController: UIViewController {
     }
     
     func loadData() {
-        let tempObjects = FRCache.getCacheArray(withKey: key) as [String]
-        print("Temporary Objects from Cache: \(tempObjects)")
-        
-        if tempObjects.count > 0 {
-            // If cache exist, use data from cache
-            objects = tempObjects
+        FRCache.loadCache(withKey: key,
+                          success: { (theObjects: [String]) in
+            self.objects = theObjects
             
             tableView.reloadData()
-        } else {
-            // If not, create new objects
+        }) {
             SVProgressHUD.show()
             
             // Wait for 5 seconds
